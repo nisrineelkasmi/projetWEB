@@ -1,41 +1,46 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var quizForm = document.getElementById('quiz-form');
-    var alertMessage = document.getElementById('alert');
+    const quizForm = document.getElementById('quiz-form');
+    const alertDiv = document.getElementById('alert');
   
     quizForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      checkAnswers();
+      checkQuizAnswers();
     });
   
-    function checkAnswers() {
-      var questions = document.querySelectorAll('.question-item');
-      var allCorrect = true;
+    function checkQuizAnswers() {
+      const questions = document.querySelectorAll('.question-item');
+      const correctAnswers = ['true','true','true'];
+
+      let totalCorrect = 0;
+      let AllQuestionsAnswered = true;  
   
-      questions.forEach(function (question) {
-        var answers = question.querySelectorAll('.answer');
-        var isQuestionCorrect = false;
+      questions.forEach(question => {
+        const selectedAnswer = question.querySelector('input:checked');
   
-        answers.forEach(function (answer) {
-          if (answer.checked && answer.value === 'true') {
-            isQuestionCorrect = true;
+        if (selectedAnswer) {
+            const userAnswer = selectedAnswer.value;
+            const isCorrect = userAnswer === correctAnswers[totalCorrect];
           }
   
-          answer.parentElement.classList.remove('correct', 'incorrect');
-        });
+        applyAnswerStyles(question, isCorrect);
   
-        if (isQuestionCorrect) {
-          question.classList.add('correct');
+        if (isCorrect) totalCorrect++
+         
         } else {
-          question.classList.add('incorrect');
-          allCorrect = false;
+          allQuestionsAnswered = false;
         }
       });
-  
-      if (allCorrect) {
-        alertMessage.style.display = 'block';
-      } else {
-        alertMessage.style.display = 'none';
+    displayResultAlert(allQuestionsAnswered, totalCorrect, questions.length);
       }
+    function applyAnswerStyles(question, isCorrect){
+        question.style.color = isCorrect ? 'green' : 'red';
     }
+
+function displayResultAlert(allQuestionsAnswered, totalCorret, totalQuestions){
+    alertDiv.style.display = allQuestionsAnswered && totalCorect === totalQuestions ? 'block' : 'none';
+    alertDiv.textContent = allQuestionAnswered && totalCorect === totalQuestions ? 'Congratulations ! You got them all right !':" ;
+}
+
+
   });
   
